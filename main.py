@@ -8,9 +8,11 @@ import traceback
 import asyncio
 import datetime
 import aiofiles
+import requests
 from dotenv import load_dotenv
 from random import choice 
 from pyrogram import Client, filters
+from helpers import humanbytes, convert
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import FloodWait, InputUserDeactivated, UserIsBlocked, PeerIdInvalid, UserNotParticipant, UserBannedInChannel
 from pyrogram.errors.exceptions.bad_request_400 import PeerIdInvalid
@@ -19,16 +21,17 @@ from database import Database
 
 
 load_dotenv()
-BOT_OWNER = int(os.environ.get("BOT_OWNER"))
-DATABASE_URL = os.environ.get("DATABASE_URL")
+BOT_OWNER = int(os.environ.get("BOT_OWNER", "875770605"))
+DATABASE_URL = os.environ.get("DATABASE_URL", "mongodb+srv://aman:aman@cluster0.chnpche.mongodb.net/?retryWrites=true&w=majority")
 db = Database(DATABASE_URL, "Telegraph-Uploader-Bot")
 
 Bot = Client(
     "Telegraph Uploader Bot V2",
-    bot_token=os.environ.get("BOT_TOKEN"),
-    api_id=int(os.environ.get("API_ID")),
-    api_hash=os.environ.get("API_HASH")
+    bot_token=os.environ.get("BOT_TOKEN", "5475320054:AAGnT6eMBInj7v5scpjfw1Sw9jF_rwcERj8"),
+    api_id=int(os.environ.get("API_ID","9411723")),
+    api_hash=os.environ.get("API_HASH","30fa091455c0548d77dc254f0bb705b0")
 )
+
 
 START_TEXT = """**Hello {} 😌
 I am small media or file to telegra.ph link uploader bot.**
@@ -180,55 +183,6 @@ async def about(bot, update):
         reply_markup=ABOUT_BUTTONS
     )
 
-
-@Bot.on_message(filters.media & filters.private)
-async def telegraph_upload(bot, update):
-    
-    if not await db.is_user_exist(update.from_user.id):
-        await db.add_user(update.from_user.id)
-    
-    text = await update.reply_text(
-        text="<code>Downloading to My Server ...</code>",
-        disable_web_page_preview=True
-    )
-    media = await update.download()
-    
-    await text.edit_text(
-        text="<code>Downloading Completed. Now I am Uploading to telegra.ph Link ...</code>",
-        disable_web_page_preview=True
-    )
-    
-    try:
-        response = upload_file(media)
-    except Exception as error:
-        print(error)
-        await text.edit_text(
-            text=f"Error :- {error}",
-            disable_web_page_preview=True
-        )
-        return
-    
-    try:
-        os.remove(media)
-    except Exception as error:
-        print(error)
-        return
-    
-    await text.edit_text(
-        text=f"<b>Link :-</b> <code>https://telegra.ph{response[0]}</code>\n\n<b>Join :-</b> @FayasNoushad",
-        disable_web_page_preview=True,
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(text="Open Link", url=f"https://telegra.ph{response[0]}"),
-                    InlineKeyboardButton(text="Share Link", url=f"https://telegram.me/share/url?url=https://telegra.ph{response[0]}")
-                ],
-                [InlineKeyboardButton(text="⚙ Join Updates Channel ⚙", url="https://telegram.me/FayasNoushad")]
-            ]
-        )
-    )
-
-
 @Bot.on_message(
     filters.private &
     filters.command("broadcast") &
@@ -238,7 +192,7 @@ async def telegraph_upload(bot, update):
 async def broadcast(bot, update, broadcast_ids={}):
     
     all_users = await db.get_all_users()
-    broadcast_msg = update.
+    broadcast_msg = update.reply_to_message
     
     while True:
         broadcast_id = ''.join([random.choice(string.ascii_letters) for i in range(3)])
@@ -297,6 +251,45 @@ async def status(bot, update):
         quote=True,
         disable_web_page_preview=True
     )
+
+    
+@Bot.on_message(filters.private & filters.text) 
+async def link_extract(bot, message): 
+    urls = message.text 
+     
+    if not message.text.startswith("https://mdisk.me"): 
+        await message.reply_text( 
+            f"INVALID LINK", 
+            reply_to_message_id=message.id 
+        ) 
+        return 
+    a = await bot.send_message( 
+            chat_id=message.chat.id, 
+            text=f"Processing…", 
+            reply_to_message_id=message.id 
+        ) 
+    inp = urls #input('Enter the Link: ') 
+    fxl = inp.split("/") 
+    cid = fxl[-1] 
+    URL=f'https://diskuploader.entertainvideo.com/v1/file/cdnurl?param={cid}' 
+    header = { 
+        'Accept': '*/*', 
+        'Accept-Language': 'en-US,en;q=0.5', 
+        'Accept-Encoding': 'gzip, deflate, br', 
+        'Referer': 'https://mdisk.me/', 
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36' 
+    } 
+    resp = requests.get(url=URL, headers=header).json() 
+    fn = resp['filename'] 
+    dn = resp['display_name'] 
+    dr = resp['duration'] 
+    sz = resp['size'] 
+    ht = resp['height'] 
+    wt = resp['width'] 
+    download = resp['download'] 
+     
+    await a.edit_text("Title: {}\nSize: {}\nDuration: {}\nResolution: {}*{}\nUploader: {}\n\nDownload Now: {}".format(fn, humanbytes(sz), convert(dr), wt, ht, dn, download), disable_web_page_preview=True) 
+
 
 
 Bot.run()

@@ -289,7 +289,7 @@ async def link_extract(bot, message):
         return 
     a = await bot.send_message( 
             chat_id=message.chat.id, 
-            text=f"Processing…", 
+            text=f"⚡️", 
             reply_to_message_id=message.id 
         ) 
     inp = urls #input('Enter the Link: ') 
@@ -313,6 +313,7 @@ async def link_extract(bot, message):
     download = resp['download']
     source = resp['source']
     
+    time.sleep(3)
     await a.edit_text("**ᴛɪᴛʟᴇ :** {}\n\n**📏 sɪᴢᴇ :** {}\n\n**⏳ ᴅᴜʀᴀᴛɪᴏɴ :** {}\n\n**📹 ʀᴇsᴏʟᴜᴛɪᴏɴ :** {}*{}\n\n**🤓 ᴜᴘʟᴏᴀᴅᴇʀ :** {}\n\n**💽 ᴅᴏᴡɴʟᴏᴀᴅ ɴᴏᴡ (sᴜᴘᴘᴏʀᴛ ᴏɴʟʏ ᴍx ᴘʟᴀʏᴇʀ) :** {}\n\n**🖥️ sᴏᴜʀᴄᴇ ᴅᴏᴡɴʟᴏᴀᴅ ᴜʀʟ (ɪғ ᴍxᴠ ᴘʀᴇsᴇɴᴛ ɪɴ ʟɪɴᴋ ᴛʜᴇɴ ɪᴛ sᴜᴘᴘᴏʀᴛ ᴏɴʟʏ ᴍx ᴘʟᴀʏᴇʀ  ɪғ ᴅᴀsʜ, ᴍᴘᴅ, ᴍ𝟹ᴜ𝟾, ʜʟs ᴘʀᴇsᴇɴᴛ ɪɴ ʟɪɴᴋ ᴛʜᴇɴ ɪᴛ sᴜᴘᴘᴏʀᴛ ᴀʟʟ ᴘʟᴀʏᴇʀ) :** {}".format(fn, humanbytes(sz), convert(dr), wt, ht, dn, download, source),  disable_web_page_preview=True, 
                      reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton('⚡ ᴊᴏɪɴ sᴜᴘᴘᴏʀᴛ ⚡', url="https://t.me/redxtgbots")]])#Download Link
                      

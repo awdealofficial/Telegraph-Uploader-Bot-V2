@@ -32,49 +32,68 @@ Bot = Client(
 )
 
 
+
+
+
+
 START_TEXT = """**Hello {} 😌
-I am small media or file to telegra.ph link uploader bot.**
+⚡\nɪ ᴀᴍ ᴍᴅɪsᴋ ʙʏᴘᴀssᴇʀ ʙᴏᴛ\n\n>> ɪ ᴄᴀɴ ʙʏᴘᴀss ᴀɴʏ ᴍᴅɪsᴋ ʟɪɴᴋ ᴛᴏ ᴅɪʀᴇᴄᴛ ʟɪɴᴋ.\n\n#ɴᴏᴛᴇ sᴇɴᴅ ʟɪɴᴋ ᴏɴᴇ ʙʏ ᴏɴᴇ \n\n ᴍᴀɪɴᴛᴀɪɴᴇᴅ ʙʏ @redxtgbots**
 
->> `I can convert under 5MB photo or video to telegraph link.`
+Made by @AmanReDX"""
 
-Made by @FayasNoushad"""
+DONATION_TEXT = """Hi there!
+
+Please support in the development of **Mdisk Downloade Bot** by supporting me via some funds!
+
+Here is the UPI id on which you can donate: `shrivastavaman100-1@okaxis`
+A donation of 10Rs+ can help me a lot!
+
+You can also help us to maintain **Mdisk Downloade Bot** by sharing or opening the below links if you didn't want to pay.
+
+> https://clk.asia/redxtgbots
+> https://clk.today/F2P5O
+> https://clk.asia/F2P5O
+
+Made by @AmanReDX"""
 
 HELP_TEXT = """**Hey, Follow these steps:**
 
-➠ Just give me a media under 5MB
-➠ Then I will download it
-➠ I will then upload it to the telegra.ph link
+➠ Just give me a Mdisk Link.
+(Single Link at a Time)
+
+➠ Ex. `https://mdisk.me/convertor/16x9/vqBoOg`
+
+➠ Than I Will Provide You Bypass Link. (File Download and Online Play Link)
 
 **Available Commands**
 
 /start - Checking Bot Online
 /help - For more help
 /about - For more about me
-/status - For bot updates
 
-Made by @FayasNoushad"""
+Made by @AmanReDX"""
 
-ABOUT_TEXT = """--**About Me**-- 😎
+ABOUT_TEXT = """--**ᴀʙᴏᴜᴛ ᴍᴇ**-- 😎
 
-🤖 **Name :** [Telegraph Uploader](https://telegram.me/{})
+🤖 **Name :** [ᴍᴅɪsᴋ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ ʙᴏᴛ](https://telegram.me/{})
 
-👨‍💻 **Developer :** [Fayas](https://github.com/FayasNoushad)
+👨‍💻 **Developer :** [ᴀᴍᴀɴʀҽᴅx](https://t.me/AmanReDX)
 
-📢 **Channel :** [Fayas Noushad](https://telegram.me/FayasNoushad)
+📢 **Channel :** [ʀҽᴅx ᴛɢ ʙᴏᴛs](https://t.me/redxtgbots)
 
-🌐 **Source :** [👉 Click here](https://github.com/FayasNoushad/Telegraph-Uploader-Bot-V2)
+📝 **Language :** [ᴘʏᴛʜᴏɴ𝟹](https://python.org)
 
-📝 **Language :** [Python3](https://python.org)
-
-🧰 **Framework :** [Pyrogram](https://pyrogram.org)"""
+🧰 **Framework :** [ᴘʏʀᴏɢʀᴀᴍ](https://pyrogram.org)"""
 
 START_BUTTONS = InlineKeyboardMarkup(
     [
         [
             InlineKeyboardButton('⚙ Help', callback_data='help'),
             InlineKeyboardButton('About 🔰', callback_data='about'),
-            InlineKeyboardButton('Close ✖️', callback_data='close')
-        ]
+            InlineKeyboardButton('Close ✖️', callback_data='close')         
+        ],
+        [InlineKeyboardButton("💸 ᴅᴏɴᴀᴛᴇ 💸", url="https://te.legra.ph/ReDX-11-15-2")]
+        
     ]
 )
 
@@ -181,6 +200,12 @@ async def about(bot, update):
         disable_web_page_preview=True,
         reply_markup=ABOUT_BUTTONS
     )
+    
+  
+    
+    
+    
+ 
 
 @Bot.on_message(
     filters.private &
@@ -278,17 +303,21 @@ async def link_extract(bot, message):
         'Referer': 'https://mdisk.me/', 
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36' 
     } 
-    resp = requests.get(url=URL, headers=header).json() 
-    fn = resp['filename'] 
-    dn = resp['display_name'] 
-    dr = resp['duration'] 
-    sz = resp['size'] 
-    ht = resp['height'] 
-    wt = resp['width'] 
-    download = resp['download'] 
-     
-    await a.edit_text("Title: {}\nSize: {}\nDuration: {}\nResolution: {}*{}\nUploader: {}\n\nDownload Now: {}".format(fn, humanbytes(sz), convert(dr), wt, ht, dn, download), disable_web_page_preview=True) 
-
+    resp = requests.get(url=URL, headers=header).json()
+    fn = resp['filename']
+    dn = resp['display_name']
+    dr = resp['duration']
+    sz = resp['size']
+    ht = resp['height']
+    wt = resp['width']
+    download = resp['download']
+    source = resp['source']
+    
+    await a.edit_text("**ᴛɪᴛʟᴇ :** {}\n\n**📏 sɪᴢᴇ :** {}\n\n**⏳ ᴅᴜʀᴀᴛɪᴏɴ :** {}\n\n**📹 ʀᴇsᴏʟᴜᴛɪᴏɴ :** {}*{}\n\n**🤓 ᴜᴘʟᴏᴀᴅᴇʀ :** {}\n\n**💽 ᴅᴏᴡɴʟᴏᴀᴅ ɴᴏᴡ (sᴜᴘᴘᴏʀᴛ ᴏɴʟʏ ᴍx ᴘʟᴀʏᴇʀ) :** {}\n\n**🖥️ sᴏᴜʀᴄᴇ ᴅᴏᴡɴʟᴏᴀᴅ ᴜʀʟ (ɪғ ᴍxᴠ ᴘʀᴇsᴇɴᴛ ɪɴ ʟɪɴᴋ ᴛʜᴇɴ ɪᴛ sᴜᴘᴘᴏʀᴛ ᴏɴʟʏ ᴍx ᴘʟᴀʏᴇʀ  ɪғ ᴅᴀsʜ, ᴍᴘᴅ, ᴍ𝟹ᴜ𝟾, ʜʟs ᴘʀᴇsᴇɴᴛ ɪɴ ʟɪɴᴋ ᴛʜᴇɴ ɪᴛ sᴜᴘᴘᴏʀᴛ ᴀʟʟ ᴘʟᴀʏᴇʀ) :** {}".format(fn, humanbytes(sz), convert(dr), wt, ht, dn, download, source),  disable_web_page_preview=True, 
+                     reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton('⚡ ᴊᴏɪɴ sᴜᴘᴘᴏʀᴛ ⚡', url="https://t.me/redxtgbots")]])#Download Link
+                     
+                     )
+    
 
 
 Bot.run()
